@@ -14,8 +14,8 @@ use Yii;
  * @property string|null $dia_chi
  * @property string $sdt_bome
  * @property float|null $toan
- * @property float|null $tieng viet
- * @property float|null $tieng anh
+ * @property float|null $tieng_viet
+ * @property float|null $tieng_anh
  * @property string|null $xep_loai
  * @property string|null $ghi_chu
  */
@@ -39,7 +39,7 @@ class QuanLyHocSinh extends \yii\db\ActiveRecord
             [['id'], 'integer'],
             [['ngay_sinh'], 'safe'],
             [['dia_chi', 'ghi_chu'], 'string'],
-            [['toan', 'tieng viet', 'tieng anh'], 'number'],
+            [['toan', 'tieng_viet', 'tieng_anh'], 'number'],
             [['ten'], 'string', 'max' => 255],
             [['ten_lop'], 'string', 'max' => 5],
             [['sdt_bome'], 'string', 'max' => 15],
@@ -54,16 +54,21 @@ class QuanLyHocSinh extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'ten' => 'Ten',
-            'ten_lop' => 'Ten Lop',
-            'ngay_sinh' => 'Ngay Sinh',
-            'dia_chi' => 'Dia Chi',
-            'sdt_bome' => 'Sdt Bome',
-            'toan' => 'Toan',
-            'tieng viet' => 'Tieng Viet',
-            'tieng anh' => 'Tieng Anh',
-            'xep_loai' => 'Xep Loai',
-            'ghi_chu' => 'Ghi Chu',
+            'ten' => 'Tên',
+            'ten_lop' => 'Lớp',
+            'ngay_sinh' => 'Ngày sinh',
+            'dia_chi' => 'Địa chỉ',
+            'sdt_bome' => 'Số điện thoại bố mẹ',
+            'toan' => 'Điểm toán',
+            'tieng_viet' => 'Điểm tiếng Việt',
+            'tieng_anh' => 'Điểm tiếng Anh',
+            'xep_loai' => 'Xếp loại',
+            'ghi_chu' => 'Ghi chú',
         ];
+    }
+
+    public static function findById($id)
+    {
+        return static::findOne(['id' => $id]);
     }
 }

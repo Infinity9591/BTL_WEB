@@ -18,7 +18,7 @@ class GiaoVienSearch extends GiaoVien
     public function rules()
     {
         return [
-            [['id', 'ma_mon', 'ma_lop'], 'integer'],
+            [['id', 'ma_mon', 'ma_lop', 'ma_account'], 'integer'],
             [['ten', 'ngay_sinh', 'dia_chi', 'sdt'], 'safe'],
         ];
     }
@@ -60,6 +60,7 @@ class GiaoVienSearch extends GiaoVien
             'ngay_sinh' => $this->ngay_sinh,
             'ma_mon' => $this->ma_mon,
             'ma_lop' => $this->ma_lop,
+            'ma_account' => $this->ma_account,
         ]);
 
         $query->andFilterWhere(['like', 'ten', $this->ten])

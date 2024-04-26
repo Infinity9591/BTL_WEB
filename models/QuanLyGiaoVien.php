@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "quan_ly_giao_vien".
@@ -16,9 +17,9 @@ use Yii;
  * @property string|null $dia_chi
  * @property string|null $sdt
  * @property string $ten_role
- * @property string $trang_thai
+// * @property string $trang_thai
  */
-class QuanLyGiaoVien extends \yii\db\ActiveRecord
+class QuanLyGiaoVien extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -34,7 +35,7 @@ class QuanLyGiaoVien extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'username', 'ten', 'ten_lop', 'ten_mon', 'ten_role', 'trang_thai'], 'required'],
+            [['id', 'username', 'ten', 'ten_lop', 'ten_mon', 'ten_role'], 'required'],
             [['id'], 'integer'],
             [['ngay_sinh'], 'safe'],
             [['dia_chi'], 'string'],
@@ -43,6 +44,7 @@ class QuanLyGiaoVien extends \yii\db\ActiveRecord
             [['ten_mon'], 'string', 'max' => 50],
             [['sdt'], 'string', 'max' => 15],
             [['ten_role'], 'string', 'max' => 20],
+//            [['trang_thai'], 'string', 'max' => 18],
         ];
     }
 
@@ -53,17 +55,26 @@ class QuanLyGiaoVien extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'username' => 'Username',
-            'ten' => 'Ten',
-            'ngay_sinh' => 'Ngay Sinh',
-            'ten_lop' => 'Ten Lop',
-            'ten_mon' => 'Ten Mon',
-            'dia_chi' => 'Dia Chi',
-            'sdt' => 'Sdt',
-            'ten_role' => 'Ten Role',
-            'trang_thai' => "Trang Thai"
+            'username' => 'Tên tài khoản',
+            'ten' => 'Tên',
+            'ngay_sinh' => 'Ngày sinh',
+            'ten_lop' => 'Tên lớp',
+            'ten_mon' => 'Tên môn',
+            'dia_chi' => 'Địa chỉ',
+            'sdt' => 'Số điện thoại',
+            'ten_role' => 'Tên chức vụ',
+//            'trang_thai' => 'Trang Thai',
         ];
     }
-
-
+    public static function findById($id)
+    {
+        return static::findOne(['id' => $id]);
+    }
+//    public static function getIdAccountByUsername($username){
+//        return User::findByUsername($username);
+//    }
+    public static function findByIdUsername($username)
+    {
+        return static::findOne(['username' => $username]);
+    }
 }

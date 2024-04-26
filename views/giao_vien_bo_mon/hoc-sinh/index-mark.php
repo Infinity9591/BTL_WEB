@@ -1,4 +1,6 @@
 <?php
+
+use app\models\GiaoVien;
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\bootstrap5\Modal;
@@ -7,29 +9,28 @@ use yii2ajaxcrud\ajaxcrud\CrudAsset;
 use yii2ajaxcrud\ajaxcrud\BulkButtonWidget;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\search\QuanLyGiaoVienSearch */
+/* @var $searchModel app\models\search\QuanLyChiTietDiemHocSinhSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Giao Viens';
+$this->title = 'Bảng điểm học sinh';
 $this->params['breadcrumbs'][] = $this->title;
 
 CrudAsset::register($this);
 
 ?>
-<div class="giao-vien-index">
+<div class="hoc-sinh-index">
     <div id="ajaxCrudDatatable">
+<!--        --><?php //= GiaoVien::findByIdAccount(Yii::$app->user->id)->ma_mon?>
         <?=GridView::widget([
             'id' => 'crud-datatable',
             'dataProvider' => $dataProvider,
             'filterModel' => $searchModel,
             'pjax' => true,
-            'columns' => require(__DIR__.'/_columns.php'),
+            'columns' => require(__DIR__.'/_columns-mark.php'),
             'toolbar' => [
                 ['content'=>
-                    Html::a(Yii::t('yii2-ajaxcrud', 'Create New'), ['create'],
-                    ['role' => 'modal-remote', 'title' => Yii::t('yii2-ajaxcrud', 'Create New').' Giao Viens','class' => 'btn btn-outline-primary']).
                     Html::a('<i class="fa fa-redo"></i>', [''],
-                    ['data-pjax' => 1, 'class' => 'btn btn-outline-success', 'title' => Yii::t('yii2-ajaxcrud', 'Reset Grid')]).
+                        ['data-pjax' => 1, 'class' => 'btn btn-outline-success', 'title' => Yii::t('yii2-ajaxcrud', 'Reset Grid')]).
                     '{toggleData}'.
                     '{export}'
                 ],
@@ -41,20 +42,20 @@ CrudAsset::register($this);
             'panel' => [
                 'type' => 'default',
                 'heading' => '<i class="fa fa-list"></i> <b>'.$this->title.'</b>',
-                'before' => '<em>* '.Yii::t('yii2-ajaxcrud', 'Resize Column').'</em>',
+                'before' => '<em> '.Yii::t('yii2-ajaxcrud', '').'</em>',
                 'after' => BulkButtonWidget::widget([
-                    'buttons' => Html::a('<i class="fa fa-trash"></i>&nbsp; '.Yii::t('yii2-ajaxcrud', 'Delete All'),
-                        ["bulkdelete"] ,
-                        [
-                            'class' => 'btn btn-danger btn-xs',
-                            'role' => 'modal-remote-bulk',
-                            'data-confirm' => false, 'data-method' => false,// for overide yii data api
-                            'data-request-method' => 'post',
-                            'data-confirm-title' => Yii::t('yii2-ajaxcrud', 'Delete'),
-                            'data-confirm-message' => Yii::t('yii2-ajaxcrud', 'Delete Confirm')
-                        ]),
-                ]).
-                '<div class="clearfix"></div>',
+                        'buttons' => Html::a('<i class="fa fa-trash"></i>&nbsp; '.Yii::t('yii2-ajaxcrud', 'Delete All'),
+                            ["bulkdelete"] ,
+                            [
+                                'class' => 'btn btn-danger btn-xs',
+                                'role' => 'modal-remote-bulk',
+                                'data-confirm' => false, 'data-method' => false,// for overide yii data api
+                                'data-request-method' => 'post',
+                                'data-confirm-title' => Yii::t('yii2-ajaxcrud', 'Delete'),
+                                'data-confirm-message' => Yii::t('yii2-ajaxcrud', 'Delete Confirm')
+                            ]),
+                    ]).
+                    '<div class="clearfix"></div>',
             ]
         ])?>
     </div>

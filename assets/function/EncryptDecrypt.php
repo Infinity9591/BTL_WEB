@@ -1,16 +1,20 @@
 <?php
-//namespace app\controllers\function;
-
 namespace app\assets\function;
+
+use app\models\User;
+use Yii;
 
 class EncryptDecrypt
 {
+
     public static function encrypt($data, $key)
     {
         $iv = openssl_random_pseudo_bytes(16);
         $encrypted = openssl_encrypt($data, "aes-256-cbc", $key, 0, $iv);
         $encryptedWithIV = base64_encode($iv . $encrypted);
+//        echo $iv." ";
         return $encryptedWithIV;
+//        return hash_hmac('sha256', $data, $key);
     }
 
     public static function decrypt($data, $key)
@@ -23,11 +27,11 @@ class EncryptDecrypt
         return $decrypted;
     }
 }
-
 ?>
-
 <?php
-   echo  EncryptDecrypt::encrypt("quanly", "tiengviet"."key").'<br/>';
-//   echo  EncryptDecrypt::decrypt(EncryptDecrypt::encrypt("quanly", "adminkey"), "adminkey");
-//   echo  EncryptDecrypt::decrypt('iTfZmuAp92fVcgMrImZsh1Nmb0V3N2xDV0ZIL3U1ZWJ5UC9tRGc9PQ==', "adminkey");
+//
+//   $encrypt = EncryptDecrypt::encrypt("quanly", "adminkey");
+//   echo $encrypt;
+//   echo  EncryptDecrypt::decrypt($encrypt, "adminkey");
+//   echo EncryptDecrypt::decrypt('xGuUsf+q+DX4YlKknm3W1HloTkZNeWZ2S2wrN0Z0WnQwL3FQeUE9PQ==', "amenkey");
 ?>

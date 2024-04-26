@@ -2,16 +2,17 @@
 
 namespace app\controllers;
 
+use app\assets\function\EncryptDecrypt;
 use app\models\Lop;
 use app\models\MonHoc;
 use app\models\QuanLyGiaoVien;
-use app\models\Role;
 use app\models\search\QuanLyGiaoVienSearch;
 use app\models\User;
 use Yii;
 use app\models\GiaoVien;
 use app\models\search\GiaoVienSearch;
-use yii\helpers\ArrayHelper;
+use yii\db\IntegrityException;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -48,7 +49,7 @@ class GiaoVienController extends Controller
         $searchModel = new QuanLyGiaoVienSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
+        return $this->render('@app/views/ban_giam_hieu/giao-vien/index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
@@ -67,9 +68,9 @@ class GiaoVienController extends Controller
         {
             Yii::$app->response->format = Response::FORMAT_JSON;
             return [
-                'title' => "GiaoVien #".$id,
-                'content' =>$this->renderAjax('view', [
-                    'model' => $this->findViewModel(['id' => $id]),
+                'title' => "Thông tin giáo viên",
+                'content' =>$this->renderAjax('@app/views/ban_giam_hieu/giao-vien/view', [
+                    'model' => $this->findViewModel($id),
                 ]),
                 'footer' => Html::button(Yii::t('yii2-ajaxcrud', 'Close'), ['class' => 'btn btn-default pull-left', 'data-bs-dismiss' => 'modal']).
                     Html::a(Yii::t('yii2-ajaxcrud', 'Update'), ['update', 'id' => $id], ['class' => 'btn btn-primary', 'role' => 'modal-remote'])
@@ -77,8 +78,8 @@ class GiaoVienController extends Controller
         }
         else
         {
-            return $this->render('view', [
-                'model' => $this->findViewModel(['id' => $id]),
+            return $this->render('@app/views/ban_giam_hieu/giao-vien/view', [
+                'model' => $this->findViewModel($id),
             ]);
         }
     }
@@ -92,7 +93,10 @@ class GiaoVienController extends Controller
     public function actionCreate()
     {
         $request = Yii::$app->request;
-        $model = new QuanLyGiaoVien();
+        $model = new GiaoVien();
+        $modelClass = Lop::find()->all();
+        $modelSubject = MonHoc::find()->all();
+        $modelUser = User::find()->all();
 
         if($request->isAjax)
         {
@@ -104,8 +108,11 @@ class GiaoVienController extends Controller
             {
                 return [
                     'title' => Yii::t('yii2-ajaxcrud', 'Create New')." GiaoVien",
-                    'content' => $this->renderAjax('create', [
+                    'content' => $this->renderAjax('@app/views/ban_giam_hieu/giao-vien/create', [
                         'model' => $model,
+                        'modelClass' => $modelClass,
+                        'modelSubject' => $modelSubject,
+                        'modelUser' => $modelUser
                     ]),
                     'footer' => Html::button(Yii::t('yii2-ajaxcrud', 'Close'), ['class' => 'btn btn-default pull-left', 'data-bs-dismiss' => 'modal']).
                         Html::button(Yii::t('yii2-ajaxcrud', 'Create'), ['class' => 'btn btn-primary', 'type' => 'submit'])
@@ -125,8 +132,11 @@ class GiaoVienController extends Controller
             {
                 return [
                     'title' => Yii::t('yii2-ajaxcrud', 'Create New')." GiaoVien",
-                    'content' => $this->renderAjax('create', [
+                    'content' => $this->renderAjax('@app/views/ban_giam_hieu/giao-vien/create', [
                         'model' => $model,
+                        'modelClass' => $modelClass,
+                        'modelSubject' => $modelSubject,
+                        'modelUser' => $modelUser
                     ]),
                     'footer' => Html::button(Yii::t('yii2-ajaxcrud', 'Close'), ['class' => 'btn btn-default pull-left', 'data-bs-dismiss' => 'modal']).
                         Html::button(Yii::t('yii2-ajaxcrud', 'Save'), ['class' => 'btn btn-primary', 'type' => 'submit'])
@@ -144,8 +154,11 @@ class GiaoVienController extends Controller
             }
             else
             {
-                return $this->render('create', [
+                return $this->render('@app/views/ban_giam_hieu/giao-vien/create', [
                     'model' => $model,
+                    'modelClass' => $modelClass,
+                    'modelSubject' => $modelSubject,
+                    'modelUser' => $modelUser
                 ]);
             }
         }
@@ -159,15 +172,14 @@ class GiaoVienController extends Controller
      * @param integer $id
      * @return mixed
      */
+
     public function actionUpdate($id)
     {
-        $viewModel = $this->findViewModel($id);
-        $model = $this -> findModel($id);
-//        $lopModel = $this -> findClassModel(Lop::findOne(['ten_lop' => $viewModel->ten_lop])->id);
-        $lopModel = (Lop::find()->all());
-        $monModel = MonHoc::find()->all();
-        $userModel = User::find()->all();
         $request = Yii::$app->request;
+        $model = $this->findModel($id);
+        $modelClass = Lop::find()->all();
+        $modelSubject = MonHoc::find()->all();
+        $modelUser = User::find()->all();
 
         if($request->isAjax)
         {
@@ -178,13 +190,12 @@ class GiaoVienController extends Controller
             if($request->isGet)
             {
                 return [
-                    'title' => Yii::t('yii2-ajaxcrud', 'Update')." GiaoVien #".$id,
-                    'content' => $this->renderAjax('update', [
+                    'title' => Yii::t('yii2-ajaxcrud', 'Update')." thông tin giáo viên",
+                    'content' => $this->renderAjax('@app/views/ban_giam_hieu/giao-vien/update', [
                         'model' => $model,
-                        'viewModel' => $viewModel,
-                        'lopModel' => $lopModel,
-                        'monModel' => $monModel,
-                        'userModel' => $userModel,
+                        'modelClass' => $modelClass,
+                        'modelSubject' => $modelSubject,
+                        'modelUser' => $modelUser
                     ]),
                     'footer' => Html::button(Yii::t('yii2-ajaxcrud', 'Close'), ['class' => 'btn btn-default pull-left', 'data-bs-dismiss' => 'modal']).
                         Html::button(Yii::t('yii2-ajaxcrud', 'Save'), ['class' => 'btn btn-primary', 'type' => 'submit'])
@@ -194,12 +205,12 @@ class GiaoVienController extends Controller
             {
                 return [
                     'forceReload' => '#crud-datatable-pjax',
-                    'title' => "GiaoVien #".$id,
-                    'content' => $this->renderAjax('view', [
+                    'title' => "Thông tin giáo viên",
+                    'content' => $this->renderAjax('@app/views/ban_giam_hieu/giao-vien/view', [
                         'model' => $model,
-                        'viewModel' => $viewModel,
-                        'lopModel' => $lopModel,
-                        'monModel' => $monModel,
+                        'modelClass' => $modelClass,
+                        'modelSubject' => $modelSubject,
+                        'modelUser' => $modelUser
                     ]),
                     'footer' => Html::button(Yii::t('yii2-ajaxcrud', 'Close'), ['class' => 'btn btn-default pull-left', 'data-bs-dismiss' => 'modal'])
 //                        Html::a(Yii::t('yii2-ajaxcrud', 'Update'), ['update', 'id' => $id],['class' => 'btn btn-primary', 'role' => 'modal-remote'])
@@ -208,12 +219,12 @@ class GiaoVienController extends Controller
             else
             {
                  return [
-                    'title' => Yii::t('yii2-ajaxcrud', 'Update')." GiaoVien #".$id,
-                    'content' => $this->renderAjax('update', [
+                    'title' => Yii::t('yii2-ajaxcrud', 'Update')." thông tin giáo viên",
+                    'content' => $this->renderAjax('@app/views/ban_giam_hieu/giao-vien/update', [
                         'model' => $model,
-                        'viewModel' => $viewModel,
-                        'lopModel' => $lopModel,
-                        'monModel' => $monModel,
+                        'modelClass' => $modelClass,
+                        'modelSubject' => $modelSubject,
+                        'modelUser' => $modelUser
                     ]),
                     'footer' => Html::button(Yii::t('yii2-ajaxcrud', 'Close'), ['class' => 'btn btn-default pull-left', 'data-bs-dismiss' => 'modal']).
                         Html::button(Yii::t('yii2-ajaxcrud', 'Save'), ['class' => 'btn btn-primary', 'type' => 'submit'])
@@ -225,17 +236,97 @@ class GiaoVienController extends Controller
             /*
             *   Process for non-ajax request
             */
-            if ($viewModel->load($request->post()) && $viewModel->save())
+            if ($model->load($request->post()) && $model->save())
             {
-                return $this->redirect(['view', 'id' => $viewModel->id]);
+                return $this->redirect(['view', 'id' => $model->id]);
             }
             else
             {
-                return $this->render('update', [
-                    'viewModel' => $viewModel,
+                return $this->render('@app/views/ban_giam_hieu/giao-vien/update', [
+                    'model' => $model,
+                    'modelClass' => $modelClass,
+                    'modelSubject' => $modelSubject,
+                    'modelUser' => $modelUser
                 ]);
             }
         }
+    }
+    /**
+     * Updates an existing HocSinh model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param int $id ID
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdateCaNhan()
+    {
+        $id = GiaoVien::findByIdAccount(Yii::$app->user->id)->id;
+        $model = $this->findPersonalModel();
+
+        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            return $this->redirect(['giao-vien/view-ca-nhan', 'id' => $model->id]);
+        }
+
+        return $this->render('@app/views/ban_giam_hieu/ca-nhan/update', [
+            'model' => $model,
+        ]);
+    }
+    /**
+     * Displays a single HocSinh model.
+     * @param int $id ID
+     * @return string
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionViewCaNhan($id)
+    {
+        return $this->render('@app/views/ban_giam_hieu/ca-nhan/view', [
+            'model' => $this->findPersonalModel(),
+        ]);
+    }
+    /**
+     * Updates an existing HocSinh model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param int $id ID
+     * @return string|\yii\web\Response
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public $enableCsrfValidation = false;
+
+    public function actionUpdateMatKhau()
+    {
+        $model = User::findById(Yii::$app->user->id);
+        $password = \app\assets\function\EncryptDecrypt::decrypt($model->password_hash, $model->auth_key);
+        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post()) ) {
+            $matKhauCu = Yii::$app->request->post('mat_khau_cu');
+            $matKhauMoi = $model->password_hash;
+            $repeatMatKhauMoi = Yii::$app->request->post('repeat_mat_khau_moi');
+            if ($matKhauCu == $password && $matKhauMoi == $repeatMatKhauMoi) {
+                if ($model->save()) {
+                    Yii::$app->session->setFlash('success', 'Cập nhật mật khẩu thành công.');
+                    return $this->redirect(['site/index']);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Đã xảy ra lỗi khi cập nhật mật khẩu.');
+                }
+            } else {
+                Yii::$app->session->setFlash('error', 'Mật khẩu cũ không đúng hoặc mật khẩu mới không khớp.');
+            }
+        }
+
+        return $this->render('@app/views/ban_giam_hieu/ca-nhan/update-mat-khau', [
+            'model' => $model,
+        ]);
+    }
+    /**
+     * Displays a single HocSinh model.
+     * @param int $id ID
+     * @return string
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionViewMatKhau($id)
+    {
+        return $this->render('@app/views/ban_giam_hieu/giao-vien/view', [
+            'model' => $this->findPersonalModel(),
+        ]);
     }
 
     /**
@@ -248,23 +339,29 @@ class GiaoVienController extends Controller
     public function actionDelete($id)
     {
         $request = Yii::$app->request;
-        $this->findModel($id)->delete();
+        try{
+            $this->findModel($id)->delete();
 
-        if($request->isAjax)
-        {
-            /*
-            *   Process for ajax request
-            */
-            Yii::$app->response->format = Response::FORMAT_JSON;
-            return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
+            if($request->isAjax)
+            {
+                /*
+                *   Process for ajax request
+                */
+                Yii::$app->response->format = Response::FORMAT_JSON;
+                return ['forceClose'=>true,'forceReload'=>'#crud-datatable-pjax'];
+            }
+            else
+            {
+                /*
+                *   Process for non-ajax request
+                */
+                return $this->redirect(['index']);
+            }
+        } catch (IntegrityException $e){
+            Yii::$app->session->setFlash('error', 'Giáo viên này đang giảng dạy');
         }
-        else
-        {
-            /*
-            *   Process for non-ajax request
-            */
-            return $this->redirect(['index']);
-        }
+        return $this->redirect(['index']);
+
     }
 
      /**
@@ -330,32 +427,9 @@ class GiaoVienController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
-
-    protected function findClassModel($id)
+    protected function findPersonalModel()
     {
-        if (($model = Lop::findOne(['id' => $id])) !== null)
-        {
-            return $model;
-        }
-        else
-        {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
-    protected function findSubjectModel($id)
-    {
-        if (($model = MonHoc::findOne(['id' => $id])) !== null)
-        {
-            return $model;
-        }
-        else
-        {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
-    protected function findRoleModel($id)
-    {
-        if (($model = Role::findOne(['id' => $id])) !== null)
+        if (($model = GiaoVien::findOne(GiaoVien::findByIdAccount(Yii::$app->user->id)->id)) !== null)
         {
             return $model;
         }

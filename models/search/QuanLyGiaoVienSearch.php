@@ -9,7 +9,7 @@ class QuanLyGiaoVienSearch extends QuanLyGiaoVien{
     public function rules()
     {
         return [
-            [['id', 'username', 'ten', 'ten_lop', 'ten_mon', 'ten_role', 'trang_thai'], 'safe'],
+            [['id', 'username', 'ten', 'ten_lop', 'ten_mon', 'ten_role'], 'safe'],
             [['dia_chi', 'sdt', 'ngay_sinh'], 'safe']
         ];
     }
@@ -56,8 +56,8 @@ class QuanLyGiaoVienSearch extends QuanLyGiaoVien{
 //            ->andFilterWhere(['like', 'sdt', $this->username])
             ->andFilterWhere(['like', 'ten_lop', $this->ten_lop])
             ->andFilterWhere(['like', 'ten_mon', $this->ten_mon])
-            ->andFilterWhere(['like', 'ten_role', $this->ten_role])
-            ->andFilterWhere(['like', 'trang_thai', $this->trang_thai]);
+            ->andFilterWhere(['like', 'ten_role', $this->ten_role]);
+//            ->andFilterWhere(['like', 'trang_thai', $this->trang_thai]);
 
         return $dataProvider;
     }

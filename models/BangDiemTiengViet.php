@@ -9,10 +9,10 @@ use Yii;
  *
  * @property int $ma_hoc_sinh
  * @property int $ma_giao_vien
- * @property int|null $diem_doc_giua_ky
- * @property int|null $diem_viet_giua_ky
- * @property int|null $diem_doc_cuoi_ky
- * @property int|null $diem_viet_cuoi_ky
+ * @property int|null $diem_giua_ky_1
+ * @property int|null $diem_cuoi_ky_1
+ * @property int|null $diem_giua_ky_2
+ * @property int|null $diem_cuoi_ky_2
  *
  * @property GiaoVien $maGiaoVien
  * @property HocSinh $maHocSinh
@@ -34,7 +34,7 @@ class BangDiemTiengViet extends \yii\db\ActiveRecord
     {
         return [
             [['ma_hoc_sinh', 'ma_giao_vien'], 'required'],
-            [['ma_hoc_sinh', 'ma_giao_vien', 'diem_doc_giua_ky', 'diem_viet_giua_ky', 'diem_doc_cuoi_ky', 'diem_viet_cuoi_ky'], 'integer'],
+            [['ma_hoc_sinh', 'ma_giao_vien', 'diem_giua_ky_1', 'diem_cuoi_ky_1', 'diem_giua_ky_2', 'diem_cuoi_ky_2'], 'integer'],
             [['ma_hoc_sinh'], 'exist', 'skipOnError' => true, 'targetClass' => HocSinh::class, 'targetAttribute' => ['ma_hoc_sinh' => 'id']],
             [['ma_giao_vien'], 'exist', 'skipOnError' => true, 'targetClass' => GiaoVien::class, 'targetAttribute' => ['ma_giao_vien' => 'id']],
         ];
@@ -48,10 +48,10 @@ class BangDiemTiengViet extends \yii\db\ActiveRecord
         return [
             'ma_hoc_sinh' => 'Ma Hoc Sinh',
             'ma_giao_vien' => 'Ma Giao Vien',
-            'diem_doc_giua_ky' => 'Diem Doc Giua Ky',
-            'diem_viet_giua_ky' => 'Diem Viet Giua Ky',
-            'diem_doc_cuoi_ky' => 'Diem Doc Cuoi Ky',
-            'diem_viet_cuoi_ky' => 'Diem Viet Cuoi Ky',
+            'diem_giua_ky_1' => 'Điểm giữa kỳ 1',
+            'diem_cuoi_ky_1' => 'Điểm cuối kỳ 1',
+            'diem_giua_ky_2' => 'Điểm giữa kỳ 2',
+            'diem_cuoi_ky_2' => 'Điểm cuối kỳ 2',
         ];
     }
 
@@ -73,5 +73,9 @@ class BangDiemTiengViet extends \yii\db\ActiveRecord
     public function getMaHocSinh()
     {
         return $this->hasOne(HocSinh::class, ['id' => 'ma_hoc_sinh']);
+    }
+    public static function findById($id)
+    {
+        return static::findOne(['ma_hoc_sinh' => $id]);
     }
 }

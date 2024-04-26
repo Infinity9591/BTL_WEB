@@ -3,23 +3,24 @@
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\QuanLyGiaoVien */
+/* @var $model app\models\QuanLyHocSinh */
 ?>
-<div class="giao-vien-view">
+<div class="hoc-sinh-view">
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
-            'username',
             'ten',
+            'ten_lop',
             'ngay_sinh',
             'dia_chi',
-            'sdt',
-            'ten_lop',
-            'ten_mon',
-            'ten_role',
-//            'trang_thai'
+            'sdt_bome',
+            'toan' ,
+            'tieng_viet' ,
+            'tieng_anh' ,
+            'xep_loai' ,
+            'ghi_chu',
         ],
     ]) ?>
 

@@ -19,6 +19,15 @@ $config = [
             'class' => '\kartik\grid\Module'
         ]
     ],
+//    'urlManager' => [
+//        'enablePrettyUrl' => true,
+//        'enableStrictParsing' => false,
+//        'showScriptName' => false,
+//        'rules' => [
+//            // ...
+//            ['class' => 'yii\rest\UrlRule', 'controller' => 'role', 'except' => ['delete', 'bulk-delete']],
+//        ],
+//    ],
 
     'components' => [
         'i18n' => [

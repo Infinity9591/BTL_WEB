@@ -40,8 +40,8 @@ class QuanLyLop extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'ten_lop' => 'Ten Lop',
-            'so_hoc_sinh' => 'So Hoc Sinh',
+            'ten_lop' => 'Tên lớp',
+            'so_hoc_sinh' => 'Số học sinh',
         ];
     }
 }

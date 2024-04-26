@@ -13,6 +13,7 @@ use Yii;
  * @property string|null $ngay_sinh
  * @property string|null $dia_chi
  * @property string $sdt_bome
+ * @property string $ghi_chu
  *
  * @property BangDiemTiengAnh[] $bangDiemTiengAnhs
  * @property BangDiemTiengViet[] $bangDiemTiengViets
@@ -38,7 +39,7 @@ class HocSinh extends \yii\db\ActiveRecord
             [['id', 'ten', 'ma_lop', 'sdt_bome'], 'required'],
             [['id', 'ma_lop'], 'integer'],
             [['ngay_sinh'], 'safe'],
-            [['dia_chi'], 'string'],
+            [['dia_chi', 'ghi_chu'], 'string'],
             [['ten'], 'string', 'max' => 255],
             [['sdt_bome'], 'string', 'max' => 15],
             [['id'], 'unique'],
@@ -53,11 +54,12 @@ class HocSinh extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'ten' => 'Ten',
-            'ma_lop' => 'Ma Lop',
-            'ngay_sinh' => 'Ngay Sinh',
-            'dia_chi' => 'Dia Chi',
-            'sdt_bome' => 'Sdt Bome',
+            'ten' => 'Tên',
+            'ma_lop' => 'Mã lớp',
+            'ngay_sinh' => 'Ngày sinh',
+            'dia_chi' => 'Địa Chỉ',
+            'sdt_bome' => 'Số điện thoại bố mẹ',
+            'ghi_chu' => 'Ghi Chú'
         ];
     }
 
@@ -99,5 +101,25 @@ class HocSinh extends \yii\db\ActiveRecord
     public function getMaLop()
     {
         return $this->hasOne(Lop::class, ['id' => 'ma_lop']);
+    }
+
+    public static function findById($id)
+    {
+        return static::findOne(['id' => $id]);
+    }
+
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($insert){
+
+                return true;
+            }
+            else{
+
+                return true;
+            }
+        }
+        return false;
     }
 }

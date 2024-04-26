@@ -38,6 +38,15 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         'brandUrl' => Yii::$app->homeUrl,
         'options' => ['class' => 'navbar-expand-md navbar-dark bg-dark fixed-top']
     ]);
+    $menuItems = [
+        'label' => 'Cá nhân',
+        'items' => [
+            ['label' => 'Thông tin cá nhân', 'url' => ['/giao-vien/update-ca-nhan']],
+            ['label' => 'Đổi mật khẩu', 'url' => ['/giao-vien/update-mat-khau']],
+            ['label' => 'Đăng xuất', 'url' => ['/site/logout'],  'linkOptions' => ['data-method' => 'post'],],
+        ],
+    ];
+
     if (Yii::$app->user->isGuest){ //guest
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right ms-auto'],
@@ -49,31 +58,33 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right ms-auto'],
             'items' => [
-                ['label' => 'Home', 'url' => ['/site/index']],
-                ['label' => 'qlgv', 'url' => ['/giao-vien/index']],
-                '<li class="nav-item">'
-                . Html::beginForm(['/site/logout'])
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'nav-link btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
+                ['label' => 'Trang chủ', 'url' => ['/site/index']],
+                ['label' => 'Giáo viên', 'url' => ['/giao-vien/index']],
+                ['label' => 'Lớp', 'url' => ['/lop/index']],
+                ['label' => 'Chức vụ', 'url' => ['/role/index']],
+                ['label' => 'Tài khoản', 'url' => ['/user/index']],
+                $menuItems,
             ]
         ]);
-    } else if (User::findIdentity(Yii::$app->user->id)->ma_role == 2){ //giao_vien
+    } else if (User::findIdentity(Yii::$app->user->id)->ma_role == 2){ //giao_vien_chu_nhiem
         echo Nav::widget([
             'options' => ['class' => 'navbar-nav navbar-right ms-auto'],
             'items' => [
-                ['label' => 'Home', 'url' => ['/site/index']],
-                '<li class="nav-item">'
-                . Html::beginForm(['/site/logout'])
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'nav-link btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
+                ['label' => 'Trang chủ', 'url' => ['/site/index']],
+                ['label' => 'Quản lí thông tin học sinh', 'url' => ['/hoc-sinh/index']],
+                ['label' => 'Quản lí điểm học sinh', 'url' => ['/hoc-sinh/index-mark']],
+                $menuItems,
+
+            ]
+        ]);
+    } else if (User::findIdentity(Yii::$app->user->id)->ma_role == 3){ //giao_vien_bo_mon
+        echo Nav::widget([
+            'options' => ['class' => 'navbar-nav navbar-right ms-auto'],
+            'items' => [
+                ['label' => 'Trang chủ', 'url' => ['/site/index']],
+//                ['label' => 'Quản lí thông tin học sinh', 'url' => ['/hoc-sinh/index']],
+                ['label' => 'Quản lí điểm học sinh', 'url' => ['/hoc-sinh/index-mark']],
+                $menuItems,
             ]
         ]);
     }
@@ -83,7 +94,7 @@ $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii
 </header>
 
 
-<main id="main" class="flex-shrink-0" role="main" style="margin-top: 80px">
+<main id="main" class="flex-shrink-0" role="main" style="margin-top: 100px">
     <div class="container">
         <?php if (!empty($this->params['breadcrumbs'])): ?>
             <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>
